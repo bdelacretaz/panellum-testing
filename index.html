@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bern c'est Bern</title>
+    <link rel="stylesheet" href="https://cdn.pannellum.org/2.3/pannellum.css"/>
+    <script type="text/javascript" src="https://cdn.pannellum.org/2.3/pannellum.js"></script>
+
+    <style>
+    #panorama {
+        width: 1200px;
+        height: 600px;
+    }
+    .custom-hotspot {
+        height: 40px;
+        width: 40px;
+        background: #f00;
+    }
+    div.custom-tooltip span {
+        visibility: hidden;
+        position: absolute;
+        border-radius: 3px;
+        background-color: #fff;
+        color: #000;
+        text-align: center;
+        max-width: 200px;
+        padding: 5px 10px;
+        margin-left: -220px;
+        cursor: default;
+    }
+    div.custom-tooltip:hover span{
+        visibility: visible;
+    }
+    div.custom-tooltip:hover span:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-width: 10px;
+        border-style: solid;
+        border-color: #fff transparent transparent transparent;
+        bottom: -20px;
+        left: -10px;
+        margin: 0 50%;
+    }
+    .green-button {
+        background: green;
+    }
+    .blue-button {
+        background: blue;
+    }
+    .yellow-button {
+        background: yellow;
+    }
+    #infobox {
+        font-size: 200%;
+    }
+    </style>
+</head>
+<body>
+
+    <div>
+        Prototype d'affichage avec <a href="https://pannellum.org">panellum</a>.
+    </div>
+    <div>
+        L'image de base devrait être adaptée au format <em><equirectangular/em>
+            ou <em>cubemap</em>, actuellement la perspective n'est pas correcte.
+    </div>
+
+<div id="panorama"></div>
+<div id="infobox"></div>
+
+<script>
+hotspotHandler = (event,data) => {
+    const e = document.getElementById("infobox");
+    e.innerHTML = data.info;
+}   
+
+// Create viewer
+viewer = pannellum.viewer('panorama', ﻿{
+    "type": "equirectangular",
+    "panorama": "bern.jpg",
+    "title": "Testing Bern",
+    "author": "Berning Testing",
+    "autoLoad": true,
+    "autoRotate": 5,
+    "hotSpots": [
+        {
+            "pitch": 14.1,
+            "yaw": 1.5,
+            "cssClass": "custom-hotspot blue-button",
+            "createTooltipFunc": hotspot,
+            "createTooltipArgs": "Le Pont Machin",
+            "clickHandlerFunc": hotspotHandler,
+            "clickHandlerArgs" : { info: "Info sur le Pont Machin. <img style='height:200px' src='bern-bw.jpg'></img>" }
+        },
+        {
+            "pitch": 10.1,
+            "yaw": 1.5,
+            "cssClass": "custom-hotspot yellow-button",
+            "createTooltipFunc": hotspot,
+            "createTooltipArgs": "Un peu plus bas",
+            "clickHandlerFunc": hotspotHandler,
+            "clickHandlerArgs" : { info: "Voici donc <b>un peu plus bas</b>" }
+        },
+        {
+            "pitch": -9.4,
+            "yaw": 222.6,
+            "cssClass": "custom-hotspot yellow-button",
+            "createTooltipFunc": hotspot,
+            "createTooltipArgs": "Une forêt",
+            "clickHandlerFunc": hotspotHandler,
+            "clickHandlerArgs" : { info: "On a cliqué <em>la forêt</em>" }
+        },
+        {
+            "pitch": -0.9,
+            "yaw": 144.4,
+            "cssClass": "custom-hotspot green-button",
+            "createTooltipFunc": hotspot,
+            "createTooltipArgs": "Le toit du bâtiment",
+            "clickHandlerFunc": hotspotHandler,
+            "clickHandlerArgs" : { info: "Rendez-vous sur <a href='http://www.perdu.com'>perdu.com</a>" }
+        }
+    ]
+});
+
+// Hot spot creation function
+function hotspot(hotSpotDiv, args) {
+    hotSpotDiv.classList.add('custom-tooltip');
+    var span = document.createElement('span');
+    span.innerHTML = args;
+    hotSpotDiv.appendChild(span);
+    span.style.width = span.scrollWidth - 20 + 'px';
+    span.style.marginLeft = -(span.scrollWidth - hotSpotDiv.offsetWidth) / 2 + 'px';
+    span.style.marginTop = -span.scrollHeight - 12 + 'px';
+}
+</script>
+
+</body>
+</html>
